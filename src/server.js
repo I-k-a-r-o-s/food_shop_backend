@@ -3,6 +3,7 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import { connectMongoDB } from "./config/mongodb.js";
+import foodRouter from "./routes/foodRoutes.js";
 
 //server config
 const server = express();
@@ -11,6 +12,10 @@ const port = process.env.PORT;
 //middleware
 server.use(express.json());
 server.use(cors());
+
+//routers
+server.use("/api/food",foodRouter)
+server.use("/images",express.static("src/uploads"))
 
 //connect to db and start server
 const serverStartLog = () => {
