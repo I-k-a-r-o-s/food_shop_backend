@@ -1,4 +1,4 @@
-import { model, models, Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 
 const foodSchema = new Schema({
   name: {
@@ -23,6 +23,6 @@ const foodSchema = new Schema({
   },
 });
 
-const FoodModel = models.FoodModel || model("FoodModel", foodSchema);
+const FoodModel = mongoose.models.FoodModel || model("FoodModel", foodSchema);
 
 export default FoodModel;
