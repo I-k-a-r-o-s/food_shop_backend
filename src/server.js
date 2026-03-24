@@ -14,20 +14,19 @@ server.use(express.json());
 server.use(cors());
 
 //routers
-server.use("/api/food",foodRouter)
-server.use("/images",express.static("src/uploads"))
+server.use("/api/food", foodRouter);
+server.use("/images", express.static("src/uploads"));
 
 //connect to db and start server
-const serverStartLog = () => {
-  console.log(`Server is running on Port:- ${port}`);
-};
-const startserver = async () => {
+const startServer = async () => {
   try {
-    connectMongoDB(); //mongodb connection
-    server.listen(port, serverStartLog());
+    await connectMongoDB(); //mongodb connection
+    server.listen(port, () => {
+      console.log(`Server is running on Port:- ${port}`);
+    });
   } catch (error) {
     console.error("Error in startServer!:", error);
     process.exit(1);
   }
 };
-startserver();
+startServer();
