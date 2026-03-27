@@ -1,7 +1,7 @@
 import UserModel from "../models/userModel.js";
 import validator from "validator";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET);
@@ -10,7 +10,43 @@ const createToken = (id) => {
 //user login
 export const userLogin = async (req, res) => {
   try {
-  } catch (error) {}
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Please Provide All Fields!",
+      });
+    }
+
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User Doesn't Exist!",
+      });
+    }
+
+    const isPasswordMatches = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatches) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid Credentials!",
+      });
+    }
+
+    const token = createToken(user._id);
+    return res.status(200).json({
+      success: true,
+      message: "User Logged In Successfully!",
+      token,
+    });
+  } catch (error) {
+    console.log("Error in userLogin!:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error!",
+    });
+  }
 };
 
 //user register
